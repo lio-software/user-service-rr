@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk as build
 
-ARG MAVEN_VERSION=4.0.0
+ARG MAVEN_VERSION=3.9.7
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && curl -fsSL https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
   | tar -xzC /usr/share/maven --strip-components=1 \
