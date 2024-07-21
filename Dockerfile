@@ -1,9 +1,20 @@
-FROM maven:3.8.5-openjdk-17
+FROM openjdk:17-jdk as build
+
+ARG MAVEN_VERSION=4.0.0
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
+  && curl -fsSL https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+  | tar -xzC /usr/share/maven --strip-components=1 \
+  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY src ./src
-RUN mvn clean install -X
-ARG SERVER_PORT=3002
-EXPOSE ${SERVER_PORT}
-CMD ["java", "-jar", "target/userservice-0.0.1-SNAPSHOT.jar", "--server.port=${SERVER_PORT}"]
+COPY . .
+
+RUN mvn -f pom.xml clean package
+
+FROM openjdk:17-jre-slim
+COPY --from=build /app/target/*.jar /app.jar
+
+ENTRYPOINT ["java","-jar","/app.jar"]
