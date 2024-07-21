@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk as build
+FROM eclipse-temurin:17-jdk as build
 
 ARG MAVEN_VERSION=3.9.7
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
@@ -10,11 +10,13 @@ ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
 WORKDIR /app
+
 COPY . .
 
 RUN mvn -f pom.xml clean package
 
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre
+
 COPY --from=build /app/target/*.jar /app.jar
 
 ENTRYPOINT ["java","-jar","/app.jar"]
