@@ -20,4 +20,9 @@ public class UserUseCase implements UserInputPort {
     public <T> Boolean deleteUserByUuid(T uuid) {
         return entityRepository.deleteUser(uuid);
     }
+
+    @Override
+    public <T> UserModel getUserByUuid(T uuid) {
+        return entityRepository.getUserByUuid(uuid);
+    }
 }

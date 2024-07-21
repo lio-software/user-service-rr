@@ -5,4 +5,5 @@ import org.lio.userservicerr.infrastructure.UserModel;
 public interface UserInputPort {
     public <T> UserModel updateUser(T user, String uuid);
     public <T> Boolean deleteUserByUuid(T uuid);
+    public <T> UserModel getUserByUuid(T uuid);
 }

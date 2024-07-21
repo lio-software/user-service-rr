@@ -55,4 +55,24 @@ public class UserApi {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping(value = "/{uuid}")
+    public ResponseEntity<BaseResponse> getUserByUuid(@PathVariable String uuid) {
+        UserModel user = userInputPort.getUserByUuid(uuid);
+
+        if (user == null) {
+            BaseResponse response = BaseResponse.builder()
+                    .data(Collections.EMPTY_LIST)
+                    .message("User not found")
+                    .build();
+            return ResponseEntity.status(404).body(response);
+        }
+
+        BaseResponse response = BaseResponse.builder()
+                .data(user)
+                .message("User retrieved successfully")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }
